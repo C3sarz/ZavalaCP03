@@ -20,6 +20,10 @@ void removeSpaces(char * str,int length)
     str[count] = '\0';
 }
 
+void sortJaggedArrays(int ** ptpArray, int rows, int columns[]){
+
+}
+
 int main(int argc, char *argv[]) {
 
     if (argc < 2) { //
