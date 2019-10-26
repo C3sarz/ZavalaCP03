@@ -11,7 +11,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-void removeSpaces(char * )
+void removeSpaces(char * str,int length)
+{
+    int count = 0;
+    for (int i = 0; i<length; i++)
+        if (str[i] != ' ' && str[i] != '\r' && str[i] != '\n')
+            str[count++] = str[i]; // here count is
+    str[count] = '\0';
+}
 
 int main(int argc, char *argv[]) {
 
@@ -36,21 +43,27 @@ int main(int argc, char *argv[]) {
         if(fgets(line,30,fp) != NULL) {
             char * token = malloc(30* sizeof(char));
             token = strtok(line, delimiter);
-            while( token != NULL ) {
-                printf( " %s\n", token );   //DEBUG------
+            removeSpaces(token,strlen(token));
+            printf("--%s--",token);
+            columns = atoi(token);
+            listArray[i] = malloc(columns * sizeof(int));
 
+            int count = 0;
+            for(int c = 0;c<columns;c++) {
                 token = strtok(NULL, delimiter);
+                removeSpaces(token,strlen(token));
+                listArray[i][count] = atoi(token);
+                count++;
             }
-
-
-
-
-
-
-
-
-
         }
+        //end list creation
+        int cc = 0;
+        int * current = listArray[0];
+        while(cc<20)
+        printf("%d",current);
+        cc++;
+        current = listArray[0]+cc;
+
     }
     fclose(fp);
     printf("No errors");
