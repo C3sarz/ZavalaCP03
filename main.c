@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+///Removes spaces from a string.
 void removeSpaces(char *str, int length) {
     int count = 0;
     for (int i = 0; i < length; i++)
@@ -19,16 +20,14 @@ void removeSpaces(char *str, int length) {
     str[count] = '\0';
 }
 
-void sortJaggedArrays(int **ptpArray, int rows, int columns[]) {
-
-}
-
+///Swaps two ints.
 void swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
 
+///Swaps the contents and sizes of two arrays.
 void swapArrays(int *array1, int length1, int *array2, int length2) {
     int temp[length1];
     for (int i = 0; i < length1; i++) {
@@ -44,9 +43,9 @@ void swapArrays(int *array1, int length1, int *array2, int length2) {
     for (int i = 0; i < length1; i++) {
         array2[i] = temp[i];
     }
-    free(temp);
 }
 
+///Main function that handles IO.
 int main(int argc, char *argv[]) {
 
     if (argc < 2) { //
@@ -62,13 +61,13 @@ int main(int argc, char *argv[]) {
     int rows = 0;
     const char delimiter[2] = ":,";
     int columns = 0;
-    char *line = malloc(30 * sizeof(char));
+    char *line = malloc(50 * sizeof(char));
     fscanf(fp, "%d", &rows);
     int columnsPerRow[rows];
     int *listArray[rows];
-    fgets(line, 30, fp);
+    fgets(line, 50, fp);
     for (int i = 0; i < rows; i++) {
-        if (fgets(line, 30, fp) != NULL) {
+        if (fgets(line, 50, fp) != NULL) {
             char *token = malloc(30 * sizeof(char));
             token = strtok(line, delimiter);
             removeSpaces(token, strlen(token));
@@ -87,6 +86,16 @@ int main(int argc, char *argv[]) {
     }//end list creation
     fclose(fp);
 
+    ///Input printing
+    printf("Input:\n");
+    for (int i = 0; i < rows; i++) {
+        printf("| ");
+        for (int j = 0; j < columnsPerRow[i]; j++) {
+            printf("%d, ", listArray[i][j]);
+        }
+        printf("|\n");
+    }
+
     //start row sorting
 
     for (int r = 0; r < rows; r++) {
@@ -102,6 +111,22 @@ int main(int argc, char *argv[]) {
 
     //end row sorting
 
+    //start per row length sorting
+
+    for (int i = 0; i < rows - 1; i++) {
+        int min = i;
+
+        for (int j = i + 1; j < rows; j++) {
+            if (columnsPerRow[j] < columnsPerRow[min]) min = j;
+        }
+        swapArrays(listArray[min], columnsPerRow[min], listArray[i], columnsPerRow[i]);
+        swap(&columnsPerRow[min], &columnsPerRow[i]);
+    }
+
+    //end per row length sorting
+
+    /// Output printing
+    printf("\nOutput:\n");
     for (int i = 0; i < rows; i++) {
         printf("| ");
         for (int j = 0; j < columnsPerRow[i]; j++) {
@@ -109,35 +134,6 @@ int main(int argc, char *argv[]) {
         }
         printf("|\n");
     }
-
-
-    //start per row length sorting
-    for (int i = 0; i < rows - 1; i++) {
-        int min = i;
-
-        for (int j = i + 1; j < rows; j++) {
-            if (columnsPerRow[j] < columnsPerRow[min]) min = j;
-        }
-        swap(&columnsPerRow[min], &columnsPerRow[i]);
-    }
-
-    for (int i = 0; i < rows; i++) {
-        printf("%d, ", columnsPerRow[i]);
-    }
-
-
-
-
-
-
-    //end per row length sorting
-
-
-
-
-    printf("--No errors--");
+    printf("--No errors--");    ///DEBUG
     return 0;
-    // 2d tut: https://www.geeksforgeeks.org/dynamically-allocate-2d-array-c/
-    //tokens: https://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm
-    //jagged arrays https://stackoverflow.com/questions/1083658/do-jagged-arrays-exist-in-c-c
 }
