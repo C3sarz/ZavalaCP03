@@ -134,6 +134,6 @@ int main(int argc, char *argv[]) {
         }
         printf("|\n");
     }
-    printf("--No errors--");    ///DEBUG
+    printf("\n--No runtime errors--\n");    ///DEBUG
     return 0;
 }
