@@ -27,6 +27,20 @@ void swap(int *a, int *b) {
     *b = temp;
 }
 
+///Sorts the rows in the list by length.
+void sortRows(int **listArray, int rows, int columnsPerRow[]) {
+    for (int r = 0; r < rows; r++) {
+        for (int i = 0; i < columnsPerRow[r] - 1; i++) {
+            int min = i;
+
+            for (int j = i + 1; j < columnsPerRow[r]; j++) {
+                if (listArray[r][j] < listArray[r][min]) min = j;
+            }
+            swap(&listArray[r][min], &listArray[r][i]);
+        }
+    }
+}
+
 ///Swaps the contents and sizes of two arrays.
 void swapArrays(int *array1, int length1, int *array2, int length2) {
     int temp[length1];
@@ -42,6 +56,19 @@ void swapArrays(int *array1, int length1, int *array2, int length2) {
     array2 = malloc(length1 * sizeof(int));
     for (int i = 0; i < length1; i++) {
         array2[i] = temp[i];
+    }
+}
+
+///Sorts the columns by int value.
+void sortColumns(int **listArray, int rows, int columnsPerRow[]) {
+    for (int i = 0; i < rows - 1; i++) {
+        int min = i;
+
+        for (int j = i + 1; j < rows; j++) {
+            if (columnsPerRow[j] < columnsPerRow[min]) min = j;
+        }
+        swapArrays(listArray[min], columnsPerRow[min], listArray[i], columnsPerRow[i]);
+        swap(&columnsPerRow[min], &columnsPerRow[i]);
     }
 }
 
@@ -87,46 +114,29 @@ int main(int argc, char *argv[]) {
     fclose(fp);
 
     ///Input printing
-    printf("Input:\n");
-    for (int i = 0; i < rows; i++) {
-        printf("| ");
-        for (int j = 0; j < columnsPerRow[i]; j++) {
-            printf("%d, ", listArray[i][j]);
-        }
-        printf("|\n");
-    }
+    printf("%d Lists:\n", rows);
+//    for (int i = 0; i < rows; i++) {
+//        printf("| ");
+//        for (int j = 0; j < columnsPerRow[i]; j++) {
+//            printf("%d, ", listArray[i][j]);
+//        }
+//        printf("|\n");
+//    }
 
     //start row sorting
 
-    for (int r = 0; r < rows; r++) {
-        for (int i = 0; i < columnsPerRow[r] - 1; i++) {
-            int min = i;
-
-            for (int j = i + 1; j < columnsPerRow[r]; j++) {
-                if (listArray[r][j] < listArray[r][min]) min = j;
-            }
-            swap(&listArray[r][min], &listArray[r][i]);
-        }
-    }
+    sortRows(listArray, rows, columnsPerRow);
 
     //end row sorting
 
-    //start per row length sorting
+    //start column sorting
 
-    for (int i = 0; i < rows - 1; i++) {
-        int min = i;
+    sortColumns(listArray, rows, columnsPerRow);
 
-        for (int j = i + 1; j < rows; j++) {
-            if (columnsPerRow[j] < columnsPerRow[min]) min = j;
-        }
-        swapArrays(listArray[min], columnsPerRow[min], listArray[i], columnsPerRow[i]);
-        swap(&columnsPerRow[min], &columnsPerRow[i]);
-    }
-
-    //end per row length sorting
+    //end column sorting
 
     /// Output printing
-    printf("\nOutput:\n");
+//    printf("\nOutput:\n");
     for (int i = 0; i < rows; i++) {
         printf("| ");
         for (int j = 0; j < columnsPerRow[i]; j++) {
@@ -134,6 +144,9 @@ int main(int argc, char *argv[]) {
         }
         printf("|\n");
     }
-    printf("\n--No runtime errors--\n");    ///DEBUG
-    return 0;
+
+    for (int i = 0; i < rows; i++) {
+        free(listArray[i]);
+    }
+    return 33;
 }
